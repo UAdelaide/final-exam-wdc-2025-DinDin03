@@ -94,6 +94,8 @@ app.get('/api/walkrequests/open', async (req, res) => {
     }
 });
 
+
+
 app.listen(PORT, async () => {
     console.log(`Server running on port ${PORT}`);
     await insertInitialData();

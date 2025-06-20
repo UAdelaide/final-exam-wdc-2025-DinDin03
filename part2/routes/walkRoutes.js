@@ -38,13 +38,34 @@ router.post('/', async (req, res) => {
 // POST an application to walk a dog (from walker)
 router.post('/:id/apply', async (req, res) => {
   const requestId = req.params.id;
-  const { walker_id } = req.body;
+
+  // Add authentication check
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'Must be logged in to apply' });
+  }
+
+  if (req.session.user.role !== 'walker') {
+    return res.status(403).json({ error: 'Only walkers can apply for walks' });
+  }
+
+  // Use walker_id from session for security (don't trust client data)
+  const sessionWalkerId = req.session.user.user_id;
 
   try {
+    // Check if walker has already applied for this walk
+    const [existingApplication] = await db.query(`
+      SELECT * FROM WalkApplications
+      WHERE request_id = ? AND walker_id = ?
+    `, [requestId, sessionWalkerId]);
+
+    if (existingApplication.length > 0) {
+      return res.status(400).json({ error: 'You have already applied for this walk' });
+    }
+
     await db.query(`
       INSERT INTO WalkApplications (request_id, walker_id)
       VALUES (?, ?)
-    `, [requestId, walker_id]);
+    `, [requestId, sessionWalkerId]);
 
     await db.query(`
       UPDATE WalkRequests
@@ -52,7 +73,7 @@ router.post('/:id/apply', async (req, res) => {
       WHERE request_id = ?
     `, [requestId]);
 
-    res.status(201).json({ message: 'Application submitted' });
+    res.status(201).json({ message: 'Application submitted successfully!' });
   } catch (error) {
     console.error('SQL Error:', error);
     res.status(500).json({ error: 'Failed to apply for walk' });

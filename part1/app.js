@@ -53,7 +53,6 @@ async function insertInitialData() {
     }
 }
 
-// Route: /api/dogs
 app.get('/api/dogs', async (req, res) => {
     try {
         const query = `

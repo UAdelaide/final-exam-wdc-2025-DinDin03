@@ -23,14 +23,24 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const { dog_id, requested_time, duration_minutes, location } = req.body;
 
+  // Add authentication check
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'Must be logged in to create walk requests' });
+  }
+
+  if (req.session.user.role !== 'owner') {
+    return res.status(403).json({ error: 'Only owners can create walk requests' });
+  }
+
   try {
     const [result] = await db.query(`
       INSERT INTO WalkRequests (dog_id, requested_time, duration_minutes, location)
       VALUES (?, ?, ?, ?)
     `, [dog_id, requested_time, duration_minutes, location]);
 
-    res.status(201).json({ message: 'Walk request created', request_id: result.insertId });
+    res.status(201).json({ message: 'Walk request created successfully', request_id: result.insertId });
   } catch (error) {
+    console.error('Create walk request error:', error);
     res.status(500).json({ error: 'Failed to create walk request' });
   }
 });

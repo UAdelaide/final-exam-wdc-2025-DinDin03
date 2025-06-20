@@ -6,8 +6,8 @@ const PORT = 3000;
 const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'your_password', // Change this to your MySQL password
-    database: 'DogWalkService',
+    password: '16October2003@',
+    database: 'dog-walk-service',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0

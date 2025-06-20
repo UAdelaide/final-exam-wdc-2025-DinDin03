@@ -51,3 +51,42 @@ router.get('/my-dogs', async (req, res) => {
 });
 
 module.exports = router;
+
+// Added to Vue.js setup function
+const userDogs = ref([]); // Store owner's dogs
+
+// Added function to load owner's dogs
+async function loadUserDogs() {
+  try {
+    const res = await fetch('/api/dogs/my-dogs'); // Call endpoint to get owner's dogs
+    if (!res.ok) {
+      throw new Error('Failed to load your dogs');
+    }
+    userDogs.value = await res.json(); // Store the dogs in reactive data
+  } catch (err) {
+    error.value = 'Failed to load your dogs: ' + err.message; // Handle errors
+  }
+}
+
+// Updated onMounted to load dogs after authentication
+onMounted(async () => {
+  const isAuthenticated = await checkAuth(); // Check authentication first
+  if (isAuthenticated) {
+    await loadUserDogs(); // Load owner's dogs
+    await loadWalks(); // Then load existing walk requests
+  }
+});
+
+// Updated return statement to include userDogs
+return {
+  form,
+  walks,
+  message,
+  error,
+  currentUser,
+  isSubmitting,
+  userDogs, // Added userDogs for dropdown
+  submitWalkRequest,
+  getStatusClass,
+  logout
+};

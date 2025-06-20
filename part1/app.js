@@ -65,7 +65,7 @@ app.get('/api/dogs', async (req, res) => {
             ORDER BY d.dog_id
         `;
 
-        const [results] = await pool.execute(query);
+        const [results] = await DBpool.execute(query);
         res.json(results);
     } catch (error) {
         console.error('Error fetching dogs:', error);

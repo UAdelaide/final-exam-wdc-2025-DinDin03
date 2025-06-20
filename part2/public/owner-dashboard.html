@@ -145,7 +145,7 @@
           }
         }
 
-        async function loadUserDogs() {
+        async function loadUserDogs() { // Load the owner's dogs
           try {
             const res = await fetch('/api/dogs/my-dogs');
             if (!res.ok) {

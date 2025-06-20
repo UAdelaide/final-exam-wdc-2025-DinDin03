@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 require('dotenv').config();
 const app = express();
-const session = require('express-session'); // Added session import
+const session = require('express-session');
 
 app.use(session({
   secret: process.env.SESSION_SECRET || 'key',

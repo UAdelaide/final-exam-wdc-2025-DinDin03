@@ -11,23 +11,20 @@
   <div id="app">
     <div class="login-container">
       <h1 class="login-title">Welcome to the Dog Walking Service!</h1>
-      <!-- Login form that submits to backend authentication -->
+      <!-- Login form -->
       <form @submit.prevent="login">
         <!-- Username input field -->
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" id="username" v-model="loginForm.username" required>
         </div>
-
         <!-- Password input field -->
         <div class="form-group">
           <label for="password">Password</label>
           <input type="password" id="password" v-model="loginForm.password" required>
         </div>
-
         <!-- Submit button -->
         <button type="submit" class="login-btn">Log In</button>
-
         <!-- Error message display for failed login attempts -->
         <div v-if="errorMessage" class="error-message">
           {{ errorMessage }}

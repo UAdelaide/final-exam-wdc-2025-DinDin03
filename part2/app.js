@@ -4,8 +4,8 @@ require('dotenv').config();
 const app = express();
 const session = require('express-session');
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'key',
+app.use(session({ // Configuring the session middleware
+  secret: process.env.SESSION_SECRET || 'key', // set
   resave: false,
   saveUninitialized: false,
   cookie: {

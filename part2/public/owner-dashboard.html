@@ -28,9 +28,14 @@
       <div class="card-body">
         <form @submit.prevent="submitWalkRequest">
           <div class="mb-3">
-            <label class="form-label">Dog ID</label>
-            <input v-model="form.dog_id" type="number" class="form-control" required>
-            <div class="form-text">Enter the ID of your dog (you can find this in your dog profile)</div>
+            <label class="form-label">Select Your Dog</label>
+            <select v-model="form.dog_id" class="form-select" required>
+              <option value="">--- Choose a dog ---</option>
+              <option v-for="dog in userDogs" :key="dog.dog_id" :value="dog.dog_id">
+                {{ dog.name }}
+              </option>
+            </select>
+            <div class="form-text">Select which dog needs a walk</div>
           </div>
           <div class="mb-3">
             <label class="form-label">Requested Date & Time</label>

@@ -93,7 +93,6 @@ module.exports = router;
 // Added new data properties
 data() {
   return {
-    // Original login data
     loginForm: { username: '', password: '' },
     errorMessage: '',
 
@@ -111,7 +110,6 @@ mounted() {
 
 // Added new methods
 methods: {
-  // Original login method unchanged
   async login() { ... },
 
   // New method: Fetch dogs from API and add random photos

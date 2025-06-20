@@ -57,7 +57,7 @@ router.post('/:id/apply', async (req, res) => {
     return res.status(403).json({ error: 'Only walkers can apply for walks' });
   }
 
-  // Use walker_id from session for security 
+  // Use walker_id from session for security
   const sessionWalkerId = req.session.user.user_id;
 
   try {

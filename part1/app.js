@@ -71,6 +71,28 @@ app.get('/api/dogs', async (req, res) => {
     }
 });
 
+app.get('/api/walkrequests/open', async (req, res) => {
+    try {
+        const query = `
+            SELECT
+                wr.request_id,
+                d.name AS dog_name,
+                wr.requested_time,
+                wr.duration_minutes,
+                wr.location,
+                u.username AS owner_username
+            FROM WalkRequests wr
+            INNER JOIN Dogs d ON wr.dog_id = d.dog_id
+            INNER JOIN Users u ON d.owner_id = u.user_id
+            WHERE wr.status = 'open'
+            ORDER BY wr.requested_time
+        `;
+        const [results] = await DBpool.execute(query);
+        res.json(results);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch open walk requests' });
+    }
+});
 
 app.listen(PORT, async () => {
     console.log(`Server running on port ${PORT}`);

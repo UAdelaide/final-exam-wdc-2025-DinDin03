@@ -242,16 +242,6 @@
           }
         },
 
-        // Helper method: Map usernames to owner IDs
-        getOwnerIdFromUsername(username) {
-          const ownerMap = {
-            'alice123': 1,
-            'carol123': 3,
-            'himaowner': 5
-          };
-          return ownerMap[username] || '?';
-        },
-
         // Handle image loading errors
         handleImageError(event, index) {
           console.error('Image failed to load for dog at index:', index);

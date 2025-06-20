@@ -94,7 +94,29 @@ app.get('/api/walkrequests/open', async (req, res) => {
     }
 });
 
+app.get('/api/walkers/summary', async (req, res) => {
+    try {
+        const query = `
+            SELECT
+                u.username AS walker_username,
+                COUNT(DISTINCT wr.rating_id) AS total_ratings,
+                IFNULL(AVG(wr.rating), NULL) AS average_rating,
+                COUNT(DISTINCT CASE WHEN wrq.status = 'completed' THEN wa.request_id END) AS completed_walks
+            FROM Users u
+            LEFT JOIN WalkApplications wa ON u.user_id = wa.walker_id AND wa.status = 'accepted'
+            LEFT JOIN WalkRequests wrq ON wa.request_id = wrq.request_id
+            LEFT JOIN WalkRatings wr ON wrq.request_id = wr.request_id AND wr.walker_id = u.user_id
+            WHERE u.role = 'walker'
+            GROUP BY u.user_id, u.username
+            ORDER BY u.username
+        `;
 
+        const [results] = await DBpool.execute(query);
+        res.json(results);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch walker summary' });
+    }
+});
 
 app.listen(PORT, async () => {
     console.log(`Server running on port ${PORT}`);

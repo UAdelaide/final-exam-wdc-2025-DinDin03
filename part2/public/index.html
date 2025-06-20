@@ -204,7 +204,7 @@
             this.dogsLoading = true;
             this.dogsError = '';
 
-            // Use your existing /api/dogs endpoint from Part 1
+            // Existing /api/dogs endpoint
             const response = await fetch('/api/dogs');
             if (!response.ok) {
               throw new Error('Failed to fetch dogs');

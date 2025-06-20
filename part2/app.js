@@ -5,12 +5,12 @@ const app = express();
 const session = require('express-session'); // Added session import
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'dog-walking-secret-key',
-  resave: false,              // Don't save session if unmodified
-  saveUninitialized: false,   // Don't create session until something stored
+  secret: process.env.SESSION_SECRET || 'key',
+  resave: false,
+  saveUninitialized: false,
   cookie: {
-    secure: false,            // Set to true if using HTTPS in production
-    httpOnly: true,           // Prevent XSS attacks
+    secure: false,
+    httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000 // Session expires in 24 hours
   }
 }));

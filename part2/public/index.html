@@ -189,9 +189,9 @@
             if (response.ok) {
               // Successful login - redirect based on user role
               if (result.user.role === 'owner') { // Redirect to owner dashboard
-                window.location.href = 'owner-dashboard.html'; // Use the correct path for your owner dashboard
-              } else if (result.user.role === 'walker') {
-                window.location.href = 'walker-dashboard.html';
+                window.location.href = 'owner-dashboard.html'; // Use the correct path for owner dashboard
+              } else if (result.user.role === 'walker') { // Redirect to walker dashboard
+                window.location.href = 'walker-dashboard.html'; // Use the correct path for walker dashboard
               }
             } else {
               // Display error message for failed login

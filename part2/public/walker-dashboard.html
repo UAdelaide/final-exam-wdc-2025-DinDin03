@@ -101,12 +101,10 @@
             throw error;
           }
         }
-
-        // Modified applyToWalk to use getCurrentUser() instead of stored currentUser
+        // Function to apply for a walk request
         async function applyToWalk(requestId) {
           try {
-            // Get current user ID through API call instead of using stored value
-            const user = await getCurrentUser();
+            const user = await getCurrentUser();  // Get the current user data
 
             const res = await fetch(`/api/walks/${requestId}/apply`, {
               method: 'POST',

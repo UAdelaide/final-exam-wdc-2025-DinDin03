@@ -47,15 +47,12 @@ async function insertInitialData() {
              '2025-06-13 16:00:00', 30, 'Dog Park Plaza', 'open')
         `);
 
-        console.log('Initial data inserted successfully');
+        console.log('Data inserted successfully');
     } catch (error) {
-        console.error('Error inserting initial data:', error);
+        console.error('Error inserting data', error);
     }
 }
 
-// Routes will go here
-
-// Start server and insert initial data
 app.listen(PORT, async () => {
     console.log(`Server running on port ${PORT}`);
     await insertInitialData();

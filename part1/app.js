@@ -68,7 +68,6 @@ app.get('/api/dogs', async (req, res) => {
         const [results] = await DBpool.execute(query);
         res.json(results);
     } catch (error) {
-        console.error('error ', error);
         res.status(500).json({ error: 'failed to fetch dogs' });
     }
 });

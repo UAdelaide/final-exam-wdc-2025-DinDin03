@@ -51,3 +51,42 @@ router.get('/my-dogs', async (req, res) => {
 });
 
 module.exports = router;
+
+// Added separate function to get current user from /api/users/me
+async function getCurrentUser() {
+  try {
+    const response = await fetch('/api/users/me'); // Make API call to get current user
+    if (!response.ok) {
+      throw new Error('Failed to get current user'); // Handle API failure
+    }
+    const user = await response.json(); // Parse user data from response
+    return user; // Return the user object
+  } catch (error) {
+    console.error('Get current user error:', error);
+    throw error; // Re-throw error for caller to handle
+  }
+}
+
+// Modified applyToWalk to use getCurrentUser() instead of stored currentUser
+async function applyToWalk(requestId) {
+  try {
+    // Get current user ID through API call instead of using stored value
+    const user = await getCurrentUser(); // Call getCurrentUser() for fresh data
+
+    const res = await fetch(`/api/walks/${requestId}/apply`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ walker_id: user.user_id }) // Use fresh user data
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) throw new Error(result.error || 'Application failed');
+    message.value = result.message; // Display success message
+    error.value = '';
+    await loadWalkRequests(); // Refresh walk requests list
+  } catch (err) {
+    error.value = err.message; // Display error message
+    message.value = '';
+  }
+}

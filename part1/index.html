@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dog Walking Service</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body { background: red; color: blue; font-size: 8px; }
+        .big { font-size: 40px; }
+        .small { font-size: 6px; }
+        .hidden { position: absolute; top: 50px; left: 5px; width: 3px; height: 3px; }
+        .far { position: absolute; top: 800px; left: 900px; }
+        input { width: 30px; }
+        .blink { animation: blink 0.2s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1 class="big">Dog Walking Service</h1>
+
+        <div v-if="loading" class="blink">Loading dog image please wait this may take a while...</div>
+
+        <div v-if="dogImage && !loading">
+            <h2>Dog of the Day</h2>
+            <img :src="dogImage" alt="dog" width="200">
+            <p class="small">Name: Buddy</p>
+            <p class="small">Breed: Golden Retriever</p>
+            <p class="small">Age: 3</p>
+            <p class="small">Available: Weekdays</p>
+        </div>
+
+        <h3>Book Service</h3>
+        <p class="small">Fill out all fields exactly or booking will be rejected automatically by our system</p>
+
+        <label class="small">Name:</label>
+        <input type="text" v-model="form.name">
+
+        <label class="small">Email:</label>
+        <input type="text" v-model="form.email">
+
+        <label class="small">Phone:</label>
+        <input type="text" v-model="form.phone">
+
+        <label class="small">Dog Size:</label>
+        <select v-model="form.size">
+            <option value="">Choose</option>
+            <option value="small">Small</option>
+            <option value="large">Large</option>
+        </select>
+
+        <label class="small">Walk Time:</label>
+        <select v-model="form.time">
+            <option value="">Choose</option>
+            <option value="30">30 min</option>
+            <option value="60">60 min</option>
+        </select>
+
+        <br><br>
+        <input type="checkbox" v-model="form.agree1" id="agree1">
+        <label for="agree1" class="small">I agree to terms and conditions</label>
+
+        <br>
+        <input type="checkbox" v-model="form.agree2" id="agree2">
+        <label for="agree2" class="small">I agree to pay cancellation fees</label>
+
+        <br>
+        <input type="checkbox" v-model="form.agree3" id="agree3">
+        <label for="agree3" class="small">I understand service may be cancelled without notice</label>
+
+        <div class="hidden" @click="hiddenClick"></div>
+
+        <button @click="submit" class="far">Submit Booking</button>
+
+        <div v-if="showPopup" style="position: fixed; top: 100px; left: 100px; background: yellow; padding: 10px;">
+            <p>Please solve: What is 847 x 293?</p>
+            <input type="text" v-model="mathAnswer">
+            <button @click="checkMath">Submit</button>
+            <button @click="showPopup = false">Cancel</button>
+        </div>
+
+        <p class="small">Important: Service available only on Tuesdays between 2-4 PM. Additional fees apply for weekends, holidays, rain, snow, or temperatures below 65 degrees. Dogs must be pre-approved by our certification board. Cancellation requires 72 hour notice or full payment is due.</p>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    dogImage: null,
+                    loading: true,
+                    showPopup: false,
+                    mathAnswer: '',
+                    form: {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        size: '',
+                        time: '',
+                        agree1: false,
+                        agree2: false,
+                        agree3: false
+                    }
+                }
+            },
+
+            mounted() {
+                this.fetchDogImage();
+            },
+
+            methods: {
+                async fetchDogImage() {
+                    try {
+                        const response = await fetch('https://dog.ceo/api/breeds/image/random');
+                        const data = await response.json();
+                        setTimeout(() => {
+                            this.dogImage = data.message;
+                            this.loading = false;
+                        }, 5000);
+                    } catch (error) {
+                        this.loading = false;
+                    }
+                },
+
+                submit() {
+                    if (!this.form.agree1 || !this.form.agree2 || !this.form.agree3) {
+                        alert('All agreements must be checked');
+                        return;
+                    }
+                    this.showPopup = true;
+                },
+
+                hiddenClick() {
+                    alert('You found the secret area');
+                },
+
+                checkMath() {
+                    if (this.mathAnswer === '248171') {
+                        alert('Booking submitted successfully');
+                        this.showPopup = false;
+                    } else {
+                        alert('Incorrect answer. Please try again.');
+                    }
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>

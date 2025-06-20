@@ -2,6 +2,27 @@ const express = require('express');
 const router = express.Router();
 const db = require('../models/db');
 
+app.get('/', async (req, res) => {
+  try {
+    const query = `
+      SELECT
+        d.name AS dog_name,
+        d.size,
+        u.username AS owner_username
+      FROM Dogs d
+      INNER JOIN Users u ON d.owner_id = u.user_id
+      ORDER BY d.dog_id
+    `;
+
+    // Use your existing database connection
+    const [results] = await db.query(query);
+    res.json(results);
+  } catch (error) {
+    console.error('Error fetching dogs:', error);
+    res.status(500).json({ error: 'Failed to fetch dogs' });
+  }
+});
+
 // GET dogs owned by the logged-in user
 router.get('/my-dogs', async (req, res) => {
   // Check if user is logged in and is an owner

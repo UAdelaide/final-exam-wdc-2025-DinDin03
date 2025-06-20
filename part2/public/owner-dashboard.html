@@ -9,7 +9,14 @@
 </head>
 <body class="bg-light">
   <div id="app" class="container py-4">
-    <h1 class="mb-4 text-primary">Owner Dashboard</h1>
+    <!-- Header with user info and logout -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="text-primary">Owner Dashboard</h1>
+      <div v-if="currentUser">
+        <span class="me-3">Welcome, {{ currentUser.username }}!</span>
+        <button @click="logout" class="btn btn-outline-secondary btn-sm">Logout</button>
+      </div>
+    </div>
 
     <!-- Walk request form -->
     <div class="card mb-4">
@@ -21,6 +28,7 @@
           <div class="mb-3">
             <label class="form-label">Dog ID</label>
             <input v-model="form.dog_id" type="number" class="form-control" required>
+            <div class="form-text">Enter the ID of your dog (you can find this in your dog profile)</div>
           </div>
           <div class="mb-3">
             <label class="form-label">Requested Date & Time</label>
@@ -28,20 +36,29 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Duration (minutes)</label>
-            <input v-model="form.duration_minutes" type="number" class="form-control" required>
+            <input v-model="form.duration_minutes" type="number" class="form-control" min="15" max="180" required>
+            <div class="form-text">Minimum 15 minutes, maximum 3 hours</div>
           </div>
           <div class="mb-3">
             <label class="form-label">Location</label>
-            <input v-model="form.location" type="text" class="form-control" required>
+            <input v-model="form.location" type="text" class="form-control" placeholder="e.g., Central Park, Main Street" required>
           </div>
-          <button type="submit" class="btn btn-success">Create Walk</button>
+          <button type="submit" class="btn btn-success" :disabled="isSubmitting">
+            {{ isSubmitting ? 'Creating...' : 'Create Walk Request' }}
+          </button>
         </form>
       </div>
     </div>
 
     <!-- Success or error messages -->
-    <div v-if="message" class="alert alert-info">{{ message }}</div>
-    <div v-if="error" class="alert alert-danger">{{ error }}</div>
+    <div v-if="message" class="alert alert-success alert-dismissible fade show">
+      {{ message }}
+      <button type="button" class="btn-close" @click="message = ''"></button>
+    </div>
+    <div v-if="error" class="alert alert-danger alert-dismissible fade show">
+      {{ error }}
+      <button type="button" class="btn-close" @click="error = ''"></button>
+    </div>
 
     <!-- List of walk requests -->
     <h2 class="mb-3">My Walk Requests</h2>
@@ -51,17 +68,24 @@
           <div class="card-body">
             <h5 class="card-title">Request #{{ walk.request_id }}</h5>
             <p class="card-text">
-              <strong>Dog:</strong> {{ walk.dog_name }} ({{ walk.size }})<br>
+              <strong>Dog:</strong> {{ walk.dog_name || 'Unknown' }} ({{ walk.size || 'Unknown size' }})<br>
               <strong>Date:</strong> {{ new Date(walk.requested_time).toLocaleString() }}<br>
               <strong>Duration:</strong> {{ walk.duration_minutes }} minutes<br>
               <strong>Location:</strong> {{ walk.location }}<br>
-              <strong>Status:</strong> {{ walk.status }}
+              <strong>Status:</strong>
+              <span :class="getStatusClass(walk.status)">{{ walk.status }}</span>
             </p>
+            <!-- Show walker info if accepted -->
+            <div v-if="walk.status === 'accepted' && walk.walker_name">
+              <strong>Walker:</strong> {{ walk.walker_name }}
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <p v-else>No walk requests yet.</p>
+    <div v-else class="text-center py-4">
+      <p class="text-muted">No walk requests yet. Create your first walk request above!</p>
+    </div>
   </div>
 
   <script>
@@ -69,6 +93,7 @@
 
     createApp({
       setup() {
+        // Reactive data
         const form = ref({
           dog_id: '',
           requested_time: '',
@@ -79,44 +104,128 @@
         const walks = ref([]);
         const message = ref('');
         const error = ref('');
+        const currentUser = ref(null);
+        const isSubmitting = ref(false);
 
-        async function loadWalks() {
+        // Check if user is authenticated and has owner role
+        async function checkAuth() {
           try {
-            const res = await fetch('/api/walks');
-            walks.value = await res.json();
-          } catch (err) {
-            error.value = 'Failed to load walk requests';
+            const response = await fetch('/api/users/me');
+            if (!response.ok) {
+              // User not logged in, redirect to login page
+              window.location.href = '/';
+              return false;
+            }
+
+            const user = await response.json();
+
+            // Check if user has owner role
+            if (user.role !== 'owner') {
+              alert('Access denied. Owner access required.');
+              window.location.href = '/';
+              return false;
+            }
+
+            currentUser.value = user;
+            return true;
+          } catch (error) {
+            console.error('Auth check failed:', error);
+            window.location.href = '/';
+            return false;
           }
         }
 
+        // Load walk requests for the current owner
+        async function loadWalks() {
+          try {
+            const res = await fetch('/api/walks');
+            if (!res.ok) {
+              throw new Error('Failed to load walk requests');
+            }
+            walks.value = await res.json();
+          } catch (err) {
+            error.value = 'Failed to load walk requests: ' + err.message;
+          }
+        }
+
+        // Submit new walk request
         async function submitWalkRequest() {
+          isSubmitting.value = true;
+          error.value = '';
+          message.value = '';
+
           try {
             const res = await fetch('/api/walks', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(form.value)
             });
+
             const result = await res.json();
 
-            if (!res.ok) throw new Error(result.error || 'Error submitting walk request');
+            if (!res.ok) {
+              throw new Error(result.error || 'Error submitting walk request');
+            }
 
-            message.value = result.message;
-            error.value = '';
+            message.value = 'Walk request created successfully!';
+
+            // Clear form
             form.value = {
               dog_id: '',
               requested_time: '',
               duration_minutes: '',
               location: ''
             };
-            loadWalks();
+
+            // Reload walks to show the new request
+            await loadWalks();
+
           } catch (err) {
             error.value = err.message;
-            message.value = '';
+          } finally {
+            isSubmitting.value = false;
           }
         }
 
-        onMounted(() => {
-          loadWalks();
+        // Get CSS class for status badge
+        function getStatusClass(status) {
+          switch(status) {
+            case 'open': return 'badge bg-warning text-dark';
+            case 'accepted': return 'badge bg-success';
+            case 'completed': return 'badge bg-primary';
+            case 'cancelled': return 'badge bg-danger';
+            default: return 'badge bg-secondary';
+          }
+        }
+
+        // Logout function
+        async function logout() {
+          try {
+            const response = await fetch('/api/users/logout', {
+              method: 'POST'
+            });
+
+            if (response.ok) {
+              // Redirect to login page
+              window.location.href = '/';
+            } else {
+              alert('Logout failed. Please try again.');
+            }
+          } catch (error) {
+            console.error('Logout error:', error);
+            alert('Logout failed. Please try again.');
+          }
+        }
+
+        // Initialize the page
+        onMounted(async () => {
+          // Check authentication first
+          const isAuthenticated = await checkAuth();
+
+          // Only load data if user is authenticated
+          if (isAuthenticated) {
+            await loadWalks();
+          }
         });
 
         return {
@@ -124,7 +233,11 @@
           walks,
           message,
           error,
-          submitWalkRequest
+          currentUser,
+          isSubmitting,
+          submitWalkRequest,
+          getStatusClass,
+          logout
         };
       }
     }).mount('#app');

@@ -28,11 +28,11 @@ router.post('/register', async (req, res) => {
   }
 });
 
-router.get('/me', (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ error: 'Not logged in' });
+router.get('/me', (req, res) => { // Get current logged-in user
+  if (!req.session.user) { // Check if user is logged in
+    return res.status(401).json({ error: 'Not logged in' }); // If not logged in, return error
   }
-  res.json(req.session.user);
+  res.json(req.session.user); // Return user data from session
 });
 
 router.post('/login', async (req, res) => { // Login endpoint

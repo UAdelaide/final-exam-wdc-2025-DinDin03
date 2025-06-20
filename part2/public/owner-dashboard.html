@@ -223,8 +223,8 @@
         // Logout function
         async function logout() {
           try {
-            const response = await fetch('/api/users/logout', {
-              method: 'POST'
+            const response = await fetch('/api/users/logout', { // Logout endpoint
+              method: 'POST' // Use POST for logout
             });
 
             if (response.ok) {

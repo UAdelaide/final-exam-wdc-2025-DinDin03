@@ -241,11 +241,9 @@
 
         // Initialize the page
         onMounted(async () => {
-          // Check authentication first
           const isAuthenticated = await checkAuth();
-
-          // Only load data if user is authenticated
           if (isAuthenticated) {
+            await loadUserDogs(); // Load owner's dogs
             await loadWalks();
           }
         });

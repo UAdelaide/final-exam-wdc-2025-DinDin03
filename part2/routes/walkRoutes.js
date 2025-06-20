@@ -112,13 +112,13 @@ mounted() {
 methods: {
   async login() { ... },
 
-  // New method: Fetch dogs from API and add random photos
+  //Fetch dogs from API and add random photos
   async fetchDogs() {
     try {
       this.dogsLoading = true;
       this.dogsError = '';
 
-      // Fetch dogs from /api/dogs endpoint (from Part 1)
+      // Fetch dogs from /api/dogs endpoint
       const response = await fetch('/api/dogs');
       if (!response.ok) {
         throw new Error('Failed to fetch dogs');

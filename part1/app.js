@@ -3,7 +3,7 @@ const mysql = require('mysql2/promise');
 const app = express();
 const PORT = 3000;
 
-const pool = mysql.createPool({
+const DBpool = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '16October2003@',
@@ -25,8 +25,6 @@ async function insertInitialData() {
             ('dinwalker', 'din@gmail.com', 'hashed101112', 'walker'),
             ('himaowner', 'hima@gmail.com', 'hashed131415', 'owner')
         `);
-
-        // Insert Dogs
         await pool.execute(`
             INSERT INTO Dogs (owner_id, name, size) VALUES
             ((SELECT user_id FROM Users WHERE username = 'alice123'), 'Max', 'medium'),
@@ -35,8 +33,6 @@ async function insertInitialData() {
             ((SELECT user_id FROM Users WHERE username = 'himaowner'), 'Megatron', 'small'),
             ((SELECT user_id FROM Users WHERE username = 'himaowner'), 'Electron', 'medium')
         `);
-
-        // Insert Walk Requests
         await pool.execute(`
             INSERT INTO WalkRequests (dog_id, requested_time, duration_minutes, location, status) VALUES
             ((SELECT dog_id FROM Dogs WHERE name = 'Max' AND owner_id = (SELECT user_id FROM Users WHERE username = 'alice123')),

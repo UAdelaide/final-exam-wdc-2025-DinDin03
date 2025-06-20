@@ -137,7 +137,7 @@
                    :alt="dog.dog_name"
                    class="dog-photo"
                    @error="handleImageError($event, index)">
-              <div v-else class="loading-dogs" style="padding: 20px;">Loading...</div>
+              <div v-else class="loading-dogs" style="padding: 20px;">Loading</div>
             </td>
           </tr>
         </tbody>
@@ -151,7 +151,6 @@
     createApp({
       data() {
         return {
-          // Original login data
           loginForm: {
             username: '',
             password: ''

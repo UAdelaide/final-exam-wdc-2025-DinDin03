@@ -5,13 +5,13 @@ const app = express();
 const session = require('express-session');
 
 app.use(session({ // Configuring the session middleware
-  secret: process.env.SESSION_SECRET || 'key', // set
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
+  secret: process.env.SESSION_SECRET || 'key', // set a secret key for session signing
+  resave: false, // don't save session if unmodified
+  saveUninitialized: false, // don't create session until something stored
+  cookie: { // configure cookie settings
     secure: false,
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: 24 * 60 * 60 * 1000 // expires in 1 day
   }
 }));
 

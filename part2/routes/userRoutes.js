@@ -67,12 +67,12 @@ router.post('/login', async (req, res) => { // Login endpoint
   }
 });
 
-router.post('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
+router.post('/logout', (req, res) => { // Logout endpoint
+  req.session.destroy((err) => { // Destroy the session
+    if (err) { // If there's an error destroying the session, return error
       return res.status(500).json({ error: 'Logout failed' });
     }
-    res.clearCookie('connect.sid');
+    res.clearCookie('connect.sid'); // Clear the session cookie
     res.json({ message: 'Logged out successfully' });
   });
 });

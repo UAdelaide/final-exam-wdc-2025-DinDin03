@@ -134,7 +134,7 @@
             <td>{{ index + 1 }}</td>
             <td>{{ dog.dog_name }}</td>
             <td>{{ dog.size }}</td>
-            <td>{{ getOwnerIdFromUsername(dog.owner_username) }}</td>
+            <td>{{ dog.id }}</td>
             <td>
               <img v-if="dog.photo"
                    :src="dog.photo"

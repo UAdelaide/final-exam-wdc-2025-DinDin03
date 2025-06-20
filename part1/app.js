@@ -13,13 +13,10 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-// Middleware
 app.use(express.json());
 
-// Function to insert initial data
 async function insertInitialData() {
     try {
-        // Insert Users
         await pool.execute(`
             INSERT INTO Users (username, email, password_hash, role) VALUES
             ('alice123', 'alice@example.com', 'hashed123', 'owner'),

@@ -75,5 +75,5 @@ app.get('/api/dogs', async (req, res) => {
 
 
 app.listen(PORT, async () => {
-    await insertInitialData();
+    console.log(`Server running on port ${PORT}`);
 });

@@ -35,12 +35,10 @@ router.get('/me', (req, res) => {
   res.json(req.session.user);
 });
 
-// Modified the POST login route to handle username-based authentication
 router.post('/login', async (req, res) => {
   const { username, password } = req.body; // Changed from email to username
 
   try {
-    // Query database using username instead of email
     const [rows] = await db.query(`
       SELECT user_id, username, email, role FROM Users
       WHERE username = ? AND password_hash = ?
@@ -52,7 +50,7 @@ router.post('/login', async (req, res) => {
 
     const user = rows[0];
 
-    // Store user information in session for persistent login state
+    // Store user in session
     req.session.user = {
       user_id: user.user_id,
       username: user.username,
@@ -60,7 +58,6 @@ router.post('/login', async (req, res) => {
       email: user.email
     };
 
-    // Send successful response with user data
     res.json({
       message: 'Login successful',
       user: req.session.user

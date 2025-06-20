@@ -64,7 +64,6 @@ app.get('/api/dogs', async (req, res) => {
             INNER JOIN Users u ON d.owner_id = u.user_id
             ORDER BY d.dog_id
         `;
-
         const [results] = await DBpool.execute(query);
         res.json(results);
     } catch (error) {

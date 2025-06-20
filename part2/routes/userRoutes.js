@@ -109,14 +109,14 @@ async function checkAuth() {
       window.location.href = '/'; // Redirect to login if not authenticated
       return false;
     }
-    const user = await response.json();
-    if (user.role !== 'owner') {
-      alert('Access denied. Owner access required.');
-      window.location.href = '/';
+    const user = await response.json(); // Parse the user data from the response
+    if (user.role !== 'owner') { // Check if the user is an owner
+      alert('Access denied. Owner access required.'); // Alert if not an owner
+      window.location.href = '/'; // Redirect to login if not an owner
       return false;
     }
-    currentUser.value = user;
-    return true;
+    currentUser.value = user; // Set the current user
+    return true; // Return true if authenticated
   } catch (error) {
     window.location.href = '/';
     return false;

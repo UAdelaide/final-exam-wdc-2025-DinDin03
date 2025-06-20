@@ -40,7 +40,7 @@ async function insertInitialData() {
             ((SELECT dog_id FROM Dogs WHERE name = 'Bella' AND owner_id = (SELECT user_id FROM Users WHERE username = 'carol123')),
              '2025-06-10 09:30:00', 45, 'Beachside Ave', 'accepted'),
             ((SELECT dog_id FROM Dogs WHERE name = 'Neutron' AND owner_id = (SELECT user_id FROM Users WHERE username = 'alice123')),
-             '2025-06-11 14:00:00', 60, 'Central Park', 'open'),
+             '2025-06-11 14:00:00', 60, 'Norwood', 'open'),
             ((SELECT dog_id FROM Dogs WHERE name = 'Megatron' AND owner_id = (SELECT user_id FROM Users WHERE username = 'himaowner')),
              '2025-06-12 07:30:00', 45, 'Riverside Trail', 'completed'),
             ((SELECT dog_id FROM Dogs WHERE name = 'Electron' AND owner_id = (SELECT user_id FROM Users WHERE username = 'himaowner')),
@@ -54,6 +54,5 @@ async function insertInitialData() {
 }
 
 app.listen(PORT, async () => {
-    console.log(`Server running on port ${PORT}`);
     await insertInitialData();
 });

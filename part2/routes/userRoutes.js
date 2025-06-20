@@ -125,8 +125,8 @@ async function checkAuth() {
 
 // Updated onMounted to check authentication
 onMounted(async () => {
-  const isAuthenticated = await checkAuth();
-  if (isAuthenticated) {
+  const isAuthenticated = await checkAuth(); // Check if the user is authenticated
+  if (isAuthenticated) { // If authenticated, load walks
     loadWalks();
   }
 });
@@ -141,5 +141,5 @@ return {
   isSubmitting,
   submitWalkRequest,
   getStatusClass,
-  logout // Added logout function
+  logout // logout function
 };

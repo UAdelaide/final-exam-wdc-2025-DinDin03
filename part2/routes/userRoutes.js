@@ -44,11 +44,11 @@ router.post('/login', async (req, res) => { // Login endpoint
       WHERE username = ? AND password_hash = ?
     `, [username, password]);
 
-    if (rows.length === 0) {
+    if (rows.length === 0) { // If no user found, return error
       return res.status(401).json({ error: 'Invalid username or password' });
     }
 
-    const user = rows[0];
+    const user = rows[0]; // Get the first user from the result
 
     // Store user in session
     req.session.user = {
@@ -62,7 +62,7 @@ router.post('/login', async (req, res) => { // Login endpoint
       message: 'Login successful',
       user: req.session.user
     });
-  } catch (error) {
+  } catch (error) { // Handle any errors during the query
     res.status(500).json({ error: 'Login failed' });
   }
 });

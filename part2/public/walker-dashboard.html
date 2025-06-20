@@ -106,6 +106,25 @@
           }
         }
 
+        // Logout function
+        async function logout() {
+          try {
+            const response = await fetch('/api/users/logout', {
+              method: 'POST'
+            });
+
+            if (response.ok) {
+              // Redirect to login page
+              window.location.href = '/';
+            } else {
+              alert('Logout failed. Please try again.');
+            }
+          } catch (error) {
+            console.error('Logout error:', error);
+            alert('Logout failed. Please try again.');
+          }
+        }
+
         onMounted(async () => {
           // Check authentication first, then load data
           const isAuthenticated = await checkAuth();

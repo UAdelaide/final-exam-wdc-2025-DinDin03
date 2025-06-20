@@ -1,30 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Dog Walking Service</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="stylesheets/style.css">
-  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-</head>
 <body>
   <div id="app">
     <div class="login-container">
+      <!-- Main heading matching the design requirements -->
       <h1 class="login-title">Welcome to the Dog Walking Service!</h1>
 
+      <!-- Login form that submits to backend authentication -->
       <form @submit.prevent="login">
+        <!-- Username input field -->
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" id="username" v-model="loginForm.username" required>
         </div>
 
+        <!-- Password input field -->
         <div class="form-group">
           <label for="password">Password</label>
           <input type="password" id="password" v-model="loginForm.password" required>
         </div>
 
+        <!-- Submit button -->
         <button type="submit" class="login-btn">Log In</button>
 
+        <!-- Error message display for failed login attempts -->
         <div v-if="errorMessage" class="error-message">
           {{ errorMessage }}
         </div>
@@ -38,18 +35,21 @@
     createApp({
       data() {
         return {
+          // Form data for login credentials
           loginForm: {
             username: '',
             password: ''
           },
-          errorMessage: ''
+          errorMessage: '' // Store error messages for display
         }
       },
       methods: {
+        // Handle login form submission
         async login() {
-          this.errorMessage = '';
+          this.errorMessage = ''; // Clear any previous error messages
 
           try {
+            // Send login request to backend API
             const response = await fetch('/api/users/login', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -59,15 +59,18 @@
             const result = await response.json();
 
             if (response.ok) {
+              // Successful login - redirect based on user role
               if (result.user.role === 'owner') {
                 window.location.href = 'owner-dashboard.html';
               } else if (result.user.role === 'walker') {
                 window.location.href = 'walker-dashboard.html';
               }
             } else {
+              // Display error message for failed login
               this.errorMessage = result.error || 'Login failed';
             }
           } catch (error) {
+            // Handle network or other errors
             this.errorMessage = 'Network error. Please try again.';
           }
         }
@@ -75,4 +78,3 @@
     }).mount('#app');
   </script>
 </body>
-</html>

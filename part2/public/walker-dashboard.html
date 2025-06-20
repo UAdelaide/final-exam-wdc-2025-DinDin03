@@ -13,9 +13,9 @@
   <div id="app" class="container py-4">
     <!--  logout button -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1 class="mb-4 text-success">Walker Dashboard</h1>
+      <h1 class="mb-4 text-success">Walker Dashboard</h1> <!-- Display current user info -->
       <div v-if="currentUser">
-        <span class="me-3">Welcome, {{ currentUser.username }}!</span>
+        <span class="me-3">Welcome, {{ currentUser.username }}!</span> <!-- Show welcome message and logout button -->
         <button @click="logout" class="btn btn-outline-secondary btn-sm">Logout</button>
       </div>
     </div>

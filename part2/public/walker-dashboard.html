@@ -87,13 +87,33 @@
           }
         }
 
+        // Added separate function to get current user from /api/users/me
+        async function getCurrentUser() {
+          try {
+            const response = await fetch('/api/users/me');
+            if (!response.ok) {
+              throw new Error('Failed to get current user');
+            }
+            const user = await response.json();
+            return user;
+          } catch (error) {
+            console.error('Get current user error:', error);
+            throw error;
+          }
+        }
+
+        // Modified applyToWalk to use getCurrentUser() instead of stored currentUser
         async function applyToWalk(requestId) {
           try {
+            // Get current user ID through API call instead of using stored value
+            const user = await getCurrentUser();
+
             const res = await fetch(`/api/walks/${requestId}/apply`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ walker_id: currentUser.value.user_id })
+              body: JSON.stringify({ walker_id: user.user_id }) // Use fresh user data
             });
+
             const result = await res.json();
 
             if (!res.ok) throw new Error(result.error || 'Application failed');

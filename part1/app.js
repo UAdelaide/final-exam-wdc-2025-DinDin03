@@ -6,7 +6,7 @@ const PORT = 3000;
 const DBpool = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: '16October2003@',
+    password: '',
     database: 'dog-walk-service',
     waitForConnections: true,
     connectionLimit: 10,

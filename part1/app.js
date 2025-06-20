@@ -110,7 +110,6 @@ app.get('/api/walkers/summary', async (req, res) => {
             GROUP BY u.user_id, u.username
             ORDER BY u.username
         `;
-
         const [results] = await DBpool.execute(query);
         res.json(results);
     } catch (error) {

@@ -89,3 +89,25 @@ router.post('/:id/apply', async (req, res) => {
 });
 
 module.exports = router;
+
+// Added public endpoint to get all dogs (no authentication required)
+router.get('/', async (req, res) => {
+  try {
+    const query = `
+      SELECT
+        d.name AS dog_name,
+        d.size,
+        u.username AS owner_username,
+        u.user_id AS owner_id
+      FROM Dogs d
+      INNER JOIN Users u ON d.owner_id = u.user_id
+      ORDER BY d.dog_id
+    `;
+
+    const [results] = await db.query(query); // Execute query to get all dogs
+    res.json(results); // Return dogs data as JSON
+  } catch (error) {
+    console.error('Error fetching dogs:', error);
+    res.status(500).json({ error: 'Failed to fetch dogs' });
+  }
+});

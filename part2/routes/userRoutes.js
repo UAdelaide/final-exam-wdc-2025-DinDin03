@@ -78,3 +78,68 @@ router.post('/logout', (req, res) => {
 });
 
 module.exports = router;
+
+// Added to Vue.js setup function
+const currentUser = ref(null); // Track the current user
+
+// Added logout function
+async function logout() {
+  try {
+    const response = await fetch('/api/users/logout', {
+      method: 'POST' // Use POST method for logout
+    });
+
+    if (response.ok) {
+      // Redirect to login page after successful logout
+      window.location.href = '/';
+    } else {
+      alert('Logout failed. Please try again.');
+    }
+  } catch (error) {
+    console.error('Logout error:', error);
+    alert('Logout failed. Please try again.');
+  }
+}
+
+// Added authentication check to get current user
+async function checkAuth() {
+  try {
+    const response = await fetch('/api/users/me');
+    if (!response.ok) {
+      window.location.href = '/';
+      return false;
+    }
+    const user = await response.json();
+    if (user.role !== 'owner') {
+      alert('Access denied. Owner access required.');
+      window.location.href = '/';
+      return false;
+    }
+    currentUser.value = user;
+    return true;
+  } catch (error) {
+    window.location.href = '/';
+    return false;
+  }
+}
+
+// Updated onMounted to check authentication
+onMounted(async () => {
+  const isAuthenticated = await checkAuth();
+  if (isAuthenticated) {
+    loadWalks();
+  }
+});
+
+// Updated return statement to include logout function
+return {
+  form,
+  walks,
+  message,
+  error,
+  currentUser,
+  isSubmitting,
+  submitWalkRequest,
+  getStatusClass,
+  logout // Added logout function
+};

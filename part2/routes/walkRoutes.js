@@ -89,32 +89,3 @@ router.post('/:id/apply', async (req, res) => {
 });
 
 module.exports = router;
-
-// Added logout function to Vue.js setup
-async function logout() { // Function to handle user logout
-  try {
-    const response = await fetch('/api/users/logout', { // Make a POST request to the logout endpoint
-      method: 'POST'
-    });
-
-    if (response.ok) {
-      // Redirect to login page after successful logout
-      window.location.href = '/';
-    } else {
-      alert('Logout failed. Please try again.'); // Alert user if logout fails
-    }
-  } catch (error) {
-    console.error('Logout error:', error);
-    alert('Logout failed. Please try again.'); // Handle any errors during logout
-  }
-}
-
-// Updated return statement to include logout function
-return {
-  walks,
-  message,
-  error,
-  currentUser,
-  applyToWalk,
-  logout // logout function
-};

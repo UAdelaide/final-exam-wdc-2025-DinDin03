@@ -231,11 +231,10 @@
               // Redirect to login page
               window.location.href = '/';
             } else {
-              alert('Logout failed. Please try again.');
+              alert('Logout failed. Please try again.'); // Show error if logout fails
             }
           } catch (error) {
-            console.error('Logout error:', error);
-            alert('Logout failed. Please try again.');
+            alert('Logout failed. Please try again.'); // Handle network errors
           }
         }
 

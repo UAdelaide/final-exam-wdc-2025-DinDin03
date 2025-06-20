@@ -34,7 +34,7 @@ router.get('/my-dogs', async (req, res) => {
     return res.status(403).json({ error: 'Only owners can view their dogs' });
   }
 
-  try { 
+  try { // Fetch dogs owned by the logged in user
     const [rows] = await db.query(`
       SELECT dog_id, name, size
       FROM Dogs

@@ -249,3 +249,46 @@
   </script>
 </body>
 </html>
+
+<!-- Dogs Table Section (Added below login form) -->
+<div class="dogs-section">
+  <h2>All Registered Dogs</h2>
+
+  <!-- Loading state -->
+  <div v-if="dogsLoading" class="loading-dogs">
+    Loading dogs and fetching photos...
+  </div>
+
+  <!-- Error state -->
+  <div v-if="dogsError" class="dogs-error">
+    {{ dogsError }}
+  </div>
+
+  <!-- Dogs table -->
+  <table v-if="!dogsLoading && dogs.length > 0" class="dogs-table">
+    <thead>
+      <tr>
+        <th>Dog ID</th>
+        <th>Name</th>
+        <th>Size</th>
+        <th>Owner ID</th>
+        <th>Photo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(dog, index) in dogs" :key="index">
+        <td>{{ index + 1 }}</td>
+        <td>{{ dog.dog_name }}</td>
+        <td>{{ dog.size }}</td>
+        <td>{{ dog.owner_id }}</td>
+        <td>
+          <img v-if="dog.photo"
+               :src="dog.photo"
+               :alt="dog.dog_name"
+               class="dog-photo">
+          <div v-else class="loading-dogs">Loading...</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

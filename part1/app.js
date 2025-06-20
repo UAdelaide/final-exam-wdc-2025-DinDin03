@@ -42,9 +42,9 @@ async function insertInitialData() {
             ((SELECT dog_id FROM Dogs WHERE name = 'Neutron' AND owner_id = (SELECT user_id FROM Users WHERE username = 'alice123')),
              '2025-06-11 14:00:00', 60, 'Norwood', 'open'),
             ((SELECT dog_id FROM Dogs WHERE name = 'Megatron' AND owner_id = (SELECT user_id FROM Users WHERE username = 'himaowner')),
-             '2025-06-12 07:30:00', 45, 'Riverside Trail', 'completed'),
+             '2025-06-12 07:30:00', 45, 'Glenelg', 'completed'),
             ((SELECT dog_id FROM Dogs WHERE name = 'Electron' AND owner_id = (SELECT user_id FROM Users WHERE username = 'himaowner')),
-             '2025-06-13 16:00:00', 30, 'Dog Park Plaza', 'open')
+             '2025-06-13 16:00:00', 30, 'Tea Tree Plaza', 'open')
         `);
 
         console.log('Data inserted successfully');

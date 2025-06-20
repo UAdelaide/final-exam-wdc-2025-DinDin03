@@ -85,7 +85,7 @@ const currentUser = ref(null); // Track the current user
 // Added logout function
 async function logout() {
   try {
-    const response = await fetch('/api/users/logout', {
+    const response = await fetch('/api/users/logout', { // Call the logout endpoint
       method: 'POST' // Use POST method for logout
     });
 
@@ -93,20 +93,20 @@ async function logout() {
       // Redirect to login page after successful logout
       window.location.href = '/';
     } else {
-      alert('Logout failed. Please try again.');
+      alert('Logout failed. Please try again.'); // Handle logout failure
     }
   } catch (error) {
     console.error('Logout error:', error);
-    alert('Logout failed. Please try again.');
+    alert('Logout failed. Please try again.'); // Handle network errors
   }
 }
 
 // Added authentication check to get current user
 async function checkAuth() {
   try {
-    const response = await fetch('/api/users/me');
+    const response = await fetch('/api/users/me'); // Call the endpoint to get current user
     if (!response.ok) {
-      window.location.href = '/';
+      window.location.href = '/'; // Redirect to login if not authenticated
       return false;
     }
     const user = await response.json();

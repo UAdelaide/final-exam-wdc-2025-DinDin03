@@ -54,7 +54,7 @@
         const error = ref('');
         const currentUser = ref(null);
 
-        // Check authentication - redirect if not logged in or not a walker
+        // Check authentication, redirect if not logged in or not a walker
         async function checkAuth() {
           try {
             const response = await fetch('/api/users/me');
@@ -87,7 +87,7 @@
           }
         }
 
-        // Added separate function to get current user from /api/users/me
+        // function to get current user from /api/users/me
         async function getCurrentUser() {
           try {
             const response = await fetch('/api/users/me');

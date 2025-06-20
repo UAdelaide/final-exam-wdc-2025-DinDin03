@@ -8,13 +8,13 @@ router.get('/', async (req, res) => {
       SELECT
         d.name AS dog_name,
         d.size,
-        u.username AS owner_username
+        u.username AS owner_username,
+        u.user_id AS owner_id
       FROM Dogs d
       INNER JOIN Users u ON d.owner_id = u.user_id
       ORDER BY d.dog_id
     `;
 
-    // Use your existing database connection
     const [results] = await db.query(query);
     res.json(results);
   } catch (error) {

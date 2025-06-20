@@ -72,7 +72,7 @@
         <button @click="submit" class="far">Submit booking</button>
 
         <div v-if="showPopup" style="position: fixed; top: 100px; left: 100px; background: yellow; padding: 10px;">
-            <p>Please solve: What is 2 x 2?</p>
+            <p>What is 2 x 2?</p>
             <input type="text" v-model="mathAnswer">
             <button @click="checkMath">Submit</button>
             <button @click="showPopup = false">Cancel</button>

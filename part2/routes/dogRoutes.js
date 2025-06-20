@@ -14,8 +14,9 @@ router.get('/my-dogs', async (req, res) => {
   }
 
   try {
+    // Query matches your Dogs table structure exactly
     const [rows] = await db.query(`
-      SELECT dog_id, name, size, breed
+      SELECT dog_id, name, size
       FROM Dogs
       WHERE owner_id = ?
       ORDER BY name

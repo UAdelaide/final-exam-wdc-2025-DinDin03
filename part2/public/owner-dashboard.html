@@ -115,6 +115,7 @@
         const error = ref('');
         const currentUser = ref(null);
         const isSubmitting = ref(false);
+        const userDogs = ref([]);
 
         // Check if user is authenticated and has owner role
         async function checkAuth() {

@@ -24,6 +24,26 @@ const walkRoutes = require('./routes/walkRoutes');
 const userRoutes = require('./routes/userRoutes');
 const dogRoutes = require('./routes/dogRoutes');
 
+app.get('/api/dogs', async (req, res) => {
+  try {
+    const query = `
+      SELECT
+        d.name AS dog_name,
+        d.size,
+        u.username AS owner_username
+      FROM Dogs d
+      INNER JOIN Users u ON d.owner_id = u.user_id
+      ORDER BY d.dog_id
+    `;
+
+    // Use your existing database connection
+    const [results] = await db.query(query);
+    res.json(results);
+  } catch (error) {
+    console.error('Error fetching dogs:', error);
+    res.status(500).json({ error: 'Failed to fetch dogs' });
+  }
+});
 
 app.use('/api/walks', walkRoutes);
 app.use('/api/users', userRoutes);

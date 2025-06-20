@@ -179,7 +179,7 @@
               body: JSON.stringify(this.loginForm)
             });
 
-            const result = await response.json();
+            const result = await response.json(); // Parse the JSON response
 
             if (response.ok) {
               // Successful login - redirect based on user role
@@ -198,7 +198,7 @@
           }
         },
 
-        // New method: Fetch dogs from your API
+        // Fetch dogs from your API
         async fetchDogs() {
           try {
             this.dogsLoading = true;

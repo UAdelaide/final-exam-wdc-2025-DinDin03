@@ -175,10 +175,7 @@
       },
 
       methods: {
-        // Original login method
         async login() {
-          this.errorMessage = ''; // Clear any previous error messages
-
           try {
             // Send login request to backend API
             const response = await fetch('/api/users/login', {

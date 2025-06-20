@@ -34,8 +34,7 @@ router.get('/my-dogs', async (req, res) => {
     return res.status(403).json({ error: 'Only owners can view their dogs' });
   }
 
-  try {
-    // Query matches your Dogs table structure exactly
+  try { 
     const [rows] = await db.query(`
       SELECT dog_id, name, size
       FROM Dogs

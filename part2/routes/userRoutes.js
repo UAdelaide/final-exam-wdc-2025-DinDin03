@@ -35,8 +35,8 @@ router.get('/me', (req, res) => {
   res.json(req.session.user);
 });
 
-router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+router.post('/login', async (req, res) => { // Login endpoint
+  const { username, password } = req.body; // Extract username and password from request body
 
   try { // Query database using username for authentication
     const [rows] = await db.query(`

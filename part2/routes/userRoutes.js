@@ -35,22 +35,38 @@ router.get('/me', (req, res) => {
   res.json(req.session.user);
 });
 
-// POST login (dummy version)
+// Modified the POST login route to handle username-based authentication
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body; // Changed from email to username
 
   try {
+    // Query database using username instead of email
     const [rows] = await db.query(`
-      SELECT user_id, username, role FROM Users
-      WHERE email = ? AND password_hash = ?
-    `, [email, password]);
+      SELECT user_id, username, email, role FROM Users
+      WHERE username = ? AND password_hash = ?
+    `, [username, password]);
 
     if (rows.length === 0) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Invalid username or password' });
     }
 
-    res.json({ message: 'Login successful', user: rows[0] });
+    const user = rows[0];
+
+    // Store user information in session for persistent login state
+    req.session.user = {
+      user_id: user.user_id,
+      username: user.username,
+      role: user.role,
+      email: user.email
+    };
+
+    // Send successful response with user data
+    res.json({
+      message: 'Login successful',
+      user: req.session.user
+    });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ error: 'Login failed' });
   }
 });

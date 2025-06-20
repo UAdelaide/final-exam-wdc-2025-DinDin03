@@ -43,7 +43,30 @@
         const walks = ref([]);
         const message = ref('');
         const error = ref('');
-        const user = 3;
+        const currentUser = ref(null);
+
+        // Check authentication - redirect if not logged in or not a walker
+        async function checkAuth() {
+          try {
+            const response = await fetch('/api/users/me');
+            if (!response.ok) {
+              window.location.href = '/';
+              return false;
+            }
+            const user = await response.json();
+            if (user.role !== 'walker') {
+              alert('Access denied. Walker access required.');
+              window.location.href = '/';
+              return false;
+            }
+            currentUser.value = user;
+            return true;
+          } catch (error) {
+            console.error('Auth check failed:', error);
+            window.location.href = '/';
+            return false;
+          }
+        }
 
         async function loadWalkRequests() {
           try {
@@ -60,7 +83,7 @@
             const res = await fetch(`/api/walks/${requestId}/apply`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ walker_id: user })
+              body: JSON.stringify({ walker_id: currentUser.value.user_id })
             });
             const result = await res.json();
 
@@ -74,8 +97,12 @@
           }
         }
 
-        onMounted(() => {
-          loadWalkRequests();
+        onMounted(async () => {
+          // Check authentication first, then load data
+          const isAuthenticated = await checkAuth();
+          if (isAuthenticated) {
+            loadWalkRequests();
+          }
         });
 
         return {

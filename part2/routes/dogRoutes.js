@@ -63,8 +63,8 @@ router.get('/my-dogs', async (req, res) => {
     return res.status(401).json({ error: 'Must be logged in' });
   }
 
-  if (req.session.user.role !== 'owner') { //
-    return res.status(403).json({ error: 'Only owners can view their dogs' });
+  if (req.session.user.role !== 'owner') { // Ensure only owners can access this route
+    return res.status(403).json({ error: 'Only owners can view their dogs' }); // If not an owner, return forbidden
   }
 
   try {
